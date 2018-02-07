@@ -1,3 +1,5 @@
+[[ -n "$ZSH_YADM_CHECK_STATUS" ]] && $ZSH_YADM_CHECK_STATUS=true
+
 _check_yadm_status () {
     local message branch_name ahead
     if [[ $(yadm status -s) ]]; then
@@ -15,8 +17,10 @@ _check_yadm_status () {
     print -P $message
 }
 
-autoload -Uz add-zsh-hook
-add-zsh-hook precmd _check_yadm_status
+if [[ "$ZSH_YADM_CHECK_STATUS" == "true" ]]; then
+  autoload -Uz add-zsh-hook
+  add-zsh-hook precmd _check_yadm_status
+fi
 
 # Aliases
 alias y=yadm
