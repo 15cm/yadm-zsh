@@ -1,25 +1,17 @@
-[[ -n "$ZSH_YADM_CHECK_STATUS" ]] && $ZSH_YADM_CHECK_STATUS=true
-
-_check_yadm_status () {
-    local message branch_name ahead
-    if [[ $(yadm status -s) ]]; then
-        message='%B%F{magenta}There are local configuration changes. Yadm sync required.%f%b'
-    else
-        branch_name=$(yadm symbolic-ref --short HEAD 2>/dev/null)
-
-        ahead=$(yadm rev-list "${branch_name}"@{upstream}..HEAD 2>/dev/null | wc -l)
-
-        if (( ahead )); then
-            message='%B%F{magenta}Run yadm push.%f%b'
-        fi
-    fi
-
-    print -P $message
+_prompt_yadm_status () {
+    case $(cat ~/.yadm/.status) in
+        (1)
+            print -P '%B%F{magenta}There are local configuration changes. Yadm sync required.%f%b'
+            ;;
+        (2)
+            print -P '%B%F{magenta}Run yadm push.%f%b'
+            ;;
+    esac
 }
 
-if [[ "$ZSH_YADM_CHECK_STATUS" == "true" ]]; then
-  autoload -Uz add-zsh-hook
-  add-zsh-hook precmd _check_yadm_status
+if [[ "$ZSH_YADM_CHECK_STATUS" = true ]]; then
+autoload -Uz add-zsh-hook
+add-zsh-hook precmd _prompt_yadm_status
 fi
 
 # Aliases
@@ -54,7 +46,6 @@ alias ycf='yadm config --list'
 alias ycl='yadm clone --recursive'
 alias yclean='yadm clean -fd'
 alias ycm='yadm checkout master'
-alias ycmsg='yadm commit -m'
 alias 'ycn!'='yadm commit -v --no-edit --amend'
 alias yco='yadm checkout'
 alias ycount='yadm shortlog -sn'
