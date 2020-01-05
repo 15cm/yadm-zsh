@@ -17,8 +17,8 @@ fi
 # Aliases
 alias y=yadm
 alias ya='yadm add'
-alias yaa='yadm add -u'
-alias yaa='yadm add -i'
+alias yaa='yadm add -A'
+alias yai='yadm add -i'
 alias yap='yadm apply'
 alias yapa='yadm add --patch'
 alias yau='yadm add --update'
